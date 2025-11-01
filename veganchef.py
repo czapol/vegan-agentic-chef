@@ -53,8 +53,8 @@ async def generate_tasks(goal):
 
 
 # Streamlit UI
-st.set_page_config(page_title="Vegan Chef", layout="centered")
-st.title(" 🌱I am your easy vegan chef")
+st.set_page_config(page_title="Vegan Chef", page_icon="🥦")
+st.title("🥦 Vegan Chef — simple, tasty, vegan")
 #st.write("Tell me what ingredients you want to cook with today.")
 
 user_goal = st.text_area("Tell me what ingredients you want to cook with today.", placeholder="e.g. I would like to make Japanese style dish with tofu and leek")
