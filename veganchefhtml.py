@@ -4,6 +4,8 @@ import openai
 from agents import Agent, Runner
 import asyncio
 import streamlit.components.v1 as components
+import base64
+from io import BytesIO
 
 from dotenv import load_dotenv
 load_dotenv(override=True) 
@@ -307,6 +309,19 @@ async def generate_tasks(goal):
     result = await Runner.run(task_generator, goal)
     return result.final_output
 
+# Function to extract text content from HTML
+def html_to_text(html_content):
+    """Convert HTML recipe to plain text format"""
+    # Simple extraction - you might want to use BeautifulSoup for better parsing
+    import re
+    
+    # Remove HTML tags
+    text = re.sub('<[^<]+?>', '', html_content)
+    # Clean up extra whitespace
+    text = re.sub(r'\n\s*\n', '\n\n', text)
+    text = re.sub(r' +', ' ', text)
+    return text.strip()
+
 
 # Streamlit UI
 st.set_page_config(page_title="Vegan Chef", layout="centered")
@@ -338,15 +353,39 @@ if st.button("Generate a recipe"):
             if html_output and len(html_output) > 0:
                 st.success("Recipe generated successfully!")
                 
-                # Option 1: Use components.html with explicit parameters
+                # Render the HTML
                 components.html(html_output, height=900, scrolling=True)
                 
-                # Option 2: Also provide a download button as backup
-                st.download_button(
-                    label="📥 Download Recipe as HTML",
-                    data=html_output,
-                    file_name="vegan_recipe.html",
-                    mime="text/html"
-                )
+                # Download options
+                st.markdown("---")
+                st.subheader("📥 Download Your Recipe")
+                
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    # Download as HTML
+                    st.download_button(
+                        label="📄 Download as HTML",
+                        data=html_output,
+                        file_name="vegan_recipe.html",
+                        mime="text/html",
+                        help="Download the recipe as a styled HTML file you can open in any browser"
+                    )
+                
+                with col2:
+                    # Download as Text
+                    text_output = html_to_text(html_output)
+                    st.download_button(
+                        label="📝 Download as Text",
+                        data=text_output,
+                        file_name="vegan_recipe.txt",
+                        mime="text/plain",
+                        help="Download the recipe as plain text without formatting"
+                    )
+                
+                with col3:
+                    # Info about screenshot
+                    st.info("💡 **Tip:** To save as image, use your browser's screenshot tool or print to PDF!")
+                
             else:
                 st.error("No HTML was generated. Please try again.")
