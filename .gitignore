@@ -1,0 +1,16 @@
+# venvs
+.venv*/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# VS Code / OS
+.vscode/
+.DS_Store
+
+# Streamlit
+.streamlit/secrets.toml
+.streamlit/cache/
+.streamlit/**/cache/
