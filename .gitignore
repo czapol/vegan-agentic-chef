@@ -14,3 +14,8 @@ __pycache__/
 .streamlit/secrets.toml
 .streamlit/cache/
 .streamlit/**/cache/
+
+
+node_modules/
+.env
+config.json
